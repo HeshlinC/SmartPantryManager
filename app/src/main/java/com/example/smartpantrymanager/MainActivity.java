@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_pantry) {
                 return true;
             } else if (id == R.id.nav_recipes) {
-                Toast.makeText(this, "Suggested Recipes coming soon", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, SuggestedRecipesActivity.class));
                 return false;
             } else if (id == R.id.nav_settings) {
                 Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();

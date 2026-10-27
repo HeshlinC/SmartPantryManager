@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddEditItemActivity" android:exported="false" />
+        <activity android:name=".SuggestedRecipesActivity" android:exported="false" />
     </application>
 
 </manifest>
