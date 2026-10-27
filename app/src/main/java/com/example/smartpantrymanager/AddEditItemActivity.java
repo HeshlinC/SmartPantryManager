@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -47,6 +48,7 @@ public class AddEditItemActivity extends AppCompatActivity {
         TextView textTitle = findViewById(R.id.textTitle);
         Button buttonSave = findViewById(R.id.buttonSave);
         Button buttonCancel = findViewById(R.id.buttonCancel);
+        Button buttonDelete = findViewById(R.id.buttonDelete);
 
         spinnerUnit.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, UNITS));
@@ -55,11 +57,13 @@ public class AddEditItemActivity extends AppCompatActivity {
         itemId = getIntent().getLongExtra(EXTRA_ITEM_ID, -1);
         if (itemId != -1) {
             textTitle.setText("Edit Ingredient");
+            buttonDelete.setVisibility(android.view.View.VISIBLE);
             loadItem();
         }
 
         buttonSave.setOnClickListener(v -> saveItem());
         buttonCancel.setOnClickListener(v -> finish());
+        buttonDelete.setOnClickListener(v -> confirmDelete());
     }
 
     // Fills the form with the existing item's values
@@ -80,6 +84,21 @@ public class AddEditItemActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    // Asks the user to confirm before deleting the item from the database
+    private void confirmDelete() {
+        String name = editName.getText().toString().trim();
+        new AlertDialog.Builder(this)
+                .setTitle("Delete ingredient")
+                .setMessage("Are you sure you want to delete \"" + name + "\"?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    dbHelper.deletePantryItem(itemId);
+                    Toast.makeText(this, "Ingredient deleted", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     // Validates the input, then creates or updates the item

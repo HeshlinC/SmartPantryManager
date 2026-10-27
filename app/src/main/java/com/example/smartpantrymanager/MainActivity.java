@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
     private PantryAdapter adapter;
     private TextView textEmpty;
+    private BottomNavigationView bottomNav;
     private final List<PantryItem> pantryItems = new ArrayList<>();
 
     @Override
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
         textEmpty = findViewById(R.id.textEmpty);
+        bottomNav = findViewById(R.id.bottomNav);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerPantry);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -54,6 +58,26 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
         fabAdd.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, AddEditItemActivity.class)));
+
+        setupBottomNavigation();
+    }
+
+    // Bottom navigation: Recipes and Settings screens are added in later commits
+    private void setupBottomNavigation() {
+        bottomNav.setSelectedItemId(R.id.nav_pantry);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_pantry) {
+                return true;
+            } else if (id == R.id.nav_recipes) {
+                Toast.makeText(this, "Suggested Recipes coming soon", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (id == R.id.nav_settings) {
+                Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return false;
+        });
     }
 
     @Override
