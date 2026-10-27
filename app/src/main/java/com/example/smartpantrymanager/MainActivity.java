@@ -1,5 +1,6 @@
 package com.example.smartpantrymanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerPantry);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PantryAdapter(pantryItems);
+
+        // Tapping an item opens the edit screen, passing its id in the Intent
+        adapter = new PantryAdapter(pantryItems, item -> {
+            Intent intent = new Intent(MainActivity.this, AddEditItemActivity.class);
+            intent.putExtra(AddEditItemActivity.EXTRA_ITEM_ID, item.getId());
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
+
+        // The + button opens the same screen in "add" mode (no id passed)
+        FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
+        fabAdd.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, AddEditItemActivity.class)));
     }
 
     @Override

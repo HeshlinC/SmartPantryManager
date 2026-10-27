@@ -12,10 +12,17 @@ import java.util.List;
 
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder> {
 
-    private final List<PantryItem> items;
+    // Lets the Activity decide what happens when an item is tapped
+    public interface OnItemClickListener {
+        void onItemClick(PantryItem item);
+    }
 
-    public PantryAdapter(List<PantryItem> items) {
+    private final List<PantryItem> items;
+    private final OnItemClickListener listener;
+
+    public PantryAdapter(List<PantryItem> items, OnItemClickListener listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,6 +43,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         } else {
             holder.expiry.setText("Expires: " + item.getExpiryDate());
         }
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 
     @Override
