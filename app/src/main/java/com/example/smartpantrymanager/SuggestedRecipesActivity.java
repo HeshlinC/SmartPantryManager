@@ -43,8 +43,12 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RecipeAdapter(suggestedRecipes, recipe ->
-                Toast.makeText(this, recipe.getName(), Toast.LENGTH_SHORT).show()));
+        // Tapping a recipe opens its detail screen, passing the id in the Intent
+        recyclerView.setAdapter(new RecipeAdapter(suggestedRecipes, recipe -> {
+            Intent intent = new Intent(SuggestedRecipesActivity.this, RecipeDetailActivity.class);
+            intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
+            startActivity(intent);
+        }));
 
         // Friendly message instead of a blank screen when nothing matches
         TextView textNoRecipes = findViewById(R.id.textNoRecipes);
