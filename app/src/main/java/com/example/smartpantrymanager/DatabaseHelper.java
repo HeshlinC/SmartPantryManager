@@ -12,7 +12,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "smart_pantry.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     // Pantry table
     public static final String TABLE_PANTRY = "pantry";
@@ -42,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COL_EXPIRY + " TEXT)");
         createRecipeTables(db);
         seedRecipes(db);
+        seedExtraRecipes(db);
     }
 
     @Override
@@ -51,6 +52,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             createRecipeTables(db);
             seedRecipes(db);
+        }
+        // Version 3 added four more recipes
+        if (oldVersion < 3) {
+            seedExtraRecipes(db);
         }
     }
 
@@ -88,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Pre-loads the recipe collection the first time the database is created
+    // Pre-loads the original recipe collection the first time the database is created
     private void seedRecipes(SQLiteDatabase db) {
         insertRecipe(db, "Cheese Toastie",
                 "1. Butter both slices of bread.\n2. Put the cheese between them.\n3. Toast in a pan until golden on both sides.",
@@ -169,6 +174,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         insertRecipe(db, "Vegetable Soup",
                 "1. Chop the carrots, potatoes and onion.\n2. Fry the onion in oil, then add the rest with water.\n3. Simmer for 25 minutes until soft.",
                 "carrot|2|pcs", "potato|2|pcs", "onion|1|pcs", "oil|15|ml");
+    }
+
+    // The four recipes added in database version 3
+    private void seedExtraRecipes(SQLiteDatabase db) {
+        insertRecipe(db, "Lasagna",
+                "1. Fry the chopped onion, add the mince and brown it, then add the chopped tomatoes and simmer for 20 minutes.\n"
+                        + "2. Melt the butter, stir in the flour, then slowly whisk in the milk until you have a thick white sauce.\n"
+                        + "3. Layer the lasagna sheets, meat sauce and white sauce in a dish, finishing with white sauce.\n"
+                        + "4. Top with the grated cheese and bake at 180 C for 40 minutes until golden.",
+                "lasagna sheet|9|pcs", "mince|500|g", "tomato|4|pcs", "onion|1|pcs",
+                "cheese|150|g", "milk|500|ml", "flour|40|g", "butter|40|g");
+
+        insertRecipe(db, "Pizza",
+                "1. Heat the oven to 220 C.\n2. Crush the tomatoes with a little oil and spread over the pizza base.\n3. Cover with the grated cheese.\n4. Bake for 12 to 15 minutes until the cheese is bubbling and golden.",
+                "pizza base|1|pcs", "tomato|2|pcs", "cheese|150|g", "oil|10|ml");
+
+        insertRecipe(db, "Mutton Curry",
+                "1. Heat the oil and fry the chopped onion until soft.\n2. Add the crushed garlic, ginger and curry powder and fry for 2 minutes.\n3. Add the mutton and brown it on all sides.\n4. Add the chopped tomatoes, potatoes and a cup of water.\n5. Cover and simmer for 1 hour until the meat is tender.",
+                "mutton|500|g", "onion|2|pcs", "tomato|2|pcs", "garlic|3|pcs",
+                "ginger|20|g", "curry powder|30|g", "oil|30|ml", "potato|2|pcs");
+
+        insertRecipe(db, "Chops and Chutney",
+                "1. Rub the lamb chops with crushed garlic.\n2. Heat the oil in a pan on high heat.\n3. Fry the chops for 4 minutes on each side.\n4. Brush with the chutney and cook for another minute until sticky and glazed.",
+                "lamb chop|4|pcs", "chutney|100|g", "garlic|2|pcs", "oil|15|ml");
     }
 
     // ---------- PANTRY CRUD ----------

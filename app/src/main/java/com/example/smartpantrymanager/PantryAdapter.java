@@ -3,13 +3,13 @@ package com.example.smartpantrymanager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -48,8 +48,10 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PantryItem item = items.get(position);
-        holder.name.setText(item.getName());
-        holder.quantity.setText(item.getQuantity() + " " + item.getUnit());
+        String name = item.getName();
+        holder.initial.setText(name.isEmpty() ? "?" : name.substring(0, 1).toUpperCase(Locale.ROOT));
+        holder.name.setText(name);
+        holder.quantity.setText(formatQuantity(item.getQuantity()) + " " + item.getUnit());
 
         // Read the Settings toggle
         SharedPreferences prefs = holder.itemView.getContext()
@@ -72,11 +74,20 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
                 holder.expiry.setText("Expires: " + expiryDate + " (" + days + " days)");
             }
             if (alertsOn && days <= EXPIRING_SOON_DAYS) {
-                holder.expiry.setTextColor(Color.RED);
+                holder.expiry.setTextColor(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.expiry_red));
             }
         }
 
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
+    }
+
+    // Shows 3 instead of 3.0 for whole numbers
+    private String formatQuantity(double quantity) {
+        if (quantity == Math.floor(quantity)) {
+            return String.valueOf((long) quantity);
+        }
+        return String.valueOf(quantity);
     }
 
     // Whole days from today until the given yyyy-MM-dd date (negative = already expired)
@@ -105,11 +116,12 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name, quantity, expiry;
+        TextView initial, name, quantity, expiry;
         ColorStateList defaultExpiryColor;
 
         ViewHolder(View itemView) {
             super(itemView);
+            initial = itemView.findViewById(R.id.textItemInitial);
             name = itemView.findViewById(R.id.textItemName);
             quantity = itemView.findViewById(R.id.textItemQuantity);
             expiry = itemView.findViewById(R.id.textItemExpiry);

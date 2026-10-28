@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settingsRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:text="Settings"
-        android:textSize="24sp"
+        android:textColor="@color/green_dark"
+        android:textSize="28sp"
         android:textStyle="bold" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchExpiryAlerts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Highlight items expiring soon"
-        android:textSize="16sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Items that expire within 3 days, or have already expired, are shown in red on your pantry list."
-        android:textSize="13sp" />
+        android:text="Customise how the app behaves"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/buttonSettingsBack"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchExpiryAlerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Highlight items expiring soon"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Items that expire within 3 days, or have already expired, are shown in red on your pantry list."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSettingsBack"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
         android:text="Back" />
 </LinearLayout>
