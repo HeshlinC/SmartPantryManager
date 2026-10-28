@@ -259,7 +259,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.update(TABLE_PANTRY, values, COL_ID + "=?",
                 new String[]{String.valueOf(item.getId())});
     }
-
+    // DELETE ALL: removes every pantry item (recipes are not affected)
+    public int clearPantry() {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(TABLE_PANTRY, null, null);
+    }
     // DELETE
     public int deletePantryItem(long id) {
         SQLiteDatabase db = getWritableDatabase();
