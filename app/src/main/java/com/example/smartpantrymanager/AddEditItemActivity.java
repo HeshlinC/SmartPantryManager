@@ -100,12 +100,31 @@ public class AddEditItemActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+    // True only for real dates in the format yyyy-MM-dd (rejects 2026-99-99)
+    private boolean isValidDate(String text) {
+        if (!text.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return false;
+        }
+        java.text.SimpleDateFormat format =
+                new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US);
+        format.setLenient(false);
+        try {
+            format.parse(text);
+            return true;
+        } catch (java.text.ParseException e) {
+            return false;
+        }
+    }
 
     // Validates the input, then creates or updates the item
     private void saveItem() {
         String name = editName.getText().toString().trim();
         String quantityText = editQuantity.getText().toString().trim();
-        String expiry = editExpiry.getText().toString().trim();
+        // Phone keyboards sometimes swap "-" for a longer dash, so convert them back
+        String expiry = editExpiry.getText().toString().trim()
+                .replace('\u2013', '-')   // en dash
+                .replace('\u2014', '-')   // em dash
+                .replace('\u2212', '-');  // minus sign
         String unit = spinnerUnit.getSelectedItem().toString();
 
         if (name.isEmpty()) {
@@ -125,8 +144,8 @@ public class AddEditItemActivity extends AppCompatActivity {
             return;
         }
 
-        if (!expiry.isEmpty() && !expiry.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            editExpiry.setError("Use the format yyyy-MM-dd");
+        if (!expiry.isEmpty() && !isValidDate(expiry)) {
+            editExpiry.setError("Enter a real date as yyyy-MM-dd");
             return;
         }
 
